@@ -31,7 +31,7 @@ endfunction
 function! s:sessionfile()
     let l:branch = s:gitbranchname()
     if (l:branch == '')
-        return s:sessiondir() . '/session.vim'
+        return s:sessiondir() . '/master'
     endif
     return s:sessiondir() . '/' . l:branch
 endfunction
