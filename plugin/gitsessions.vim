@@ -7,7 +7,9 @@ if exists('g:loaded_gitsessions') || &cp
 endif
 let g:loaded_gitsessions = 1
 
-let g:gitsessions_dir = '/.vim/tmp/sessions'
+if !exists("g:gitsessions_dir")
+    let g:gitsessions_dir = 'sessions'
+endif
 
 function! s:trim(string)
     return substitute(substitute(a:string, '^\s*\(.\{-}\)\s*$', '\1', ''), '\n', '', '')
@@ -18,7 +20,7 @@ function! s:gitbranchname()
 endfunction
 
 function! s:sessiondir()
-    let l:dir = $HOME . g:gitsessions_dir . getcwd()
+    let l:dir = $HOME . '/.vim/' . g:gitsessions_dir . getcwd()
     if (filewritable(l:dir) != 2)
         exe 'silent !mkdir -p ' l:dir
         redraw!
