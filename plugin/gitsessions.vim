@@ -60,8 +60,17 @@ function! g:LoadSession()
     endif
 endfunction
 
+function! g:DeleteSession()
+    let l:file = s:sessionfile()
+    if (filereadable(l:file))
+        echom "session deleted: " . l:file
+        call delete(l:file)
+    endif
+endfunction
+
 au VimEnter * nested :call g:LoadSession()
 au VimLeave * :call g:UpdateSession()
 
 nnoremap <leader>ss :call g:SaveSession()<cr>
 nnoremap <leader>ls :call g:LoadSession()<cr>
+nnoremap <leader>ds :call g:DeleteSession()<cr>
