@@ -69,6 +69,10 @@ endfunction
 au VimEnter * nested :call g:LoadSession()
 au VimLeave * :call g:UpdateSession()
 
-nnoremap <leader>ss :call g:SaveSession()<cr>
-nnoremap <leader>ls :call g:LoadSession()<cr>
-nnoremap <leader>ds :call g:DeleteSession()<cr>
+silent! nnoremap <unique> <silent> <leader>ss :call g:SaveSession()<cr>
+silent! nnoremap <unique> <silent> <leader>ls :call g:LoadSession()<cr>
+silent! nnoremap <unique> <silent> <leader>ds :call g:DeleteSession()<cr>
+
+command SaveSession call g:SaveSession()
+command LoadSession call g:LoadSession()
+command DeleteSession call g:DeleteSession()
