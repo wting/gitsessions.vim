@@ -14,7 +14,7 @@ function! s:trim(string)
 endfunction
 
 function! s:gitbranchname()
-    return trim((system("git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* //'")))
+    return s:trim((system("git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* //'")))
 endfunction
 
 function! s:sessiondir()
@@ -27,21 +27,21 @@ function! s:sessiondir()
 endfunction
 
 function! s:sessionfile()
-    let l:branch = GitBranchName()
+    let l:branch = s:gitbranchname()
     if (l:branch == '')
-        return sessiondir() . '/session.vim'
+        return s:sessiondir() . '/session.vim'
     endif
-    return sessiondir() . '/' . l:branch
+    return s:sessiondir() . '/' . l:branch
 endfunction
 
 function! g:SaveSession()
-    let l:file = sessionfile()
+    let l:file = s:sessionfile()
     exe "mksession! " . l:file
     echom "session created: " . l:file
 endfunction
 
 function! g:UpdateSession()
-    let l:file = sessionfile()
+    let l:file = s:sessionfile()
     if (filereadable(l:file))
         exe "mksession! " . l:file
         echom "session updated: " . l:file
@@ -49,7 +49,7 @@ function! g:UpdateSession()
 endfunction
 
 function! g:LoadSession()
-    let l:file = sessionfile()
+    let l:file = s:sessionfile()
     if (filereadable(l:file))
         echom "session loaded: " . l:file
         exe 'source ' l:file
@@ -58,8 +58,8 @@ function! g:LoadSession()
     endif
 endfunction
 
-au VimEnter * nested :call LoadSession()
-au VimLeave * :call UpdateSession()
+au VimEnter * nested :call g:LoadSession()
+au VimLeave * :call g:UpdateSession()
 
-nnoremap <leader>ss :call SaveSession()<cr>
-nnoremap <leader>ls :call LoadSession()<cr>
+nnoremap <leader>ss :call g:SaveSession()<cr>
+nnoremap <leader>ls :call g:LoadSession()<cr>
