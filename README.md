@@ -1,4 +1,4 @@
-# gitsessions - auto save/load sessions based on git branches
+# gitsessions
 
 ## Description
 
@@ -10,13 +10,11 @@ If the directory is not a git repository, then the session saves it to a default
 
 ## Usage
 
-`cd` to the project directory, open buffers/windows/splits and work as normal.
-Save the session at least once if no session existed.
+`cd` to the directory and work as normal. Save the session at least once per
+directory and git branch. Sessions are automatically saved when exiting Vim.
 
-On subsequent runs, run Vim in the correct directory and git branch and the
-previous settings will be automatically loaded.
-
-Sessions are automatically saved when exiting Vim.
+In the future, run Vim in the same directory and git branch and previous
+settings will be restored.
 
 ### Commands
 
@@ -51,8 +49,7 @@ details.
 
 ## Acknowledgement
 
-This plugin is based on the comments in Vim Wikia's [Go Away And Come Back][vw]
-entry.
+This plugin is based on Vim Wikia's [Go Away And Come Back][vw] entry.
 
 ## License
 
