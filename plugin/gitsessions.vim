@@ -1,4 +1,4 @@
-" gitsessions.vim - Save / autoload vim sessions on git branches
+" gitsessions.vim - save / autoload vim sessions on git branches
 " Maintainer:       William Ting <http://williamting.com>
 " Version:          0.1
 
@@ -55,8 +55,6 @@ function! g:LoadSession()
     if (filereadable(l:file))
         echom "session loaded: " . l:file
         exe 'source ' l:file
-    else
-        echom "session not found: " . l:file
     endif
 endfunction
 
