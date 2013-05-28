@@ -51,6 +51,10 @@ function! g:UpdateSession()
 endfunction
 
 function! g:LoadSession()
+    if (argc() != 0)
+        return
+    endif
+
     let l:file = s:sessionfile()
     if (filereadable(l:file))
         echom "session loaded: " . l:file
