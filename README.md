@@ -40,10 +40,6 @@ Default session directory is `~/.vim/sessions` and can be modified in `~/.vimrc`
 1. Add `Bundle 'wting/gitsessions.vim'` to `~/.vimrc`
 2. `vim +BundleInstall +qall`
 
-*Note:* Vundle will not automatically detect Rust files properly if `filetype
-on` is executed before Vundle. Please check the [quickstart][vqs] for more
-details.
-
 ### Using [Pathogen][p]
 
 1. `cd ~/.vim/bundle`
