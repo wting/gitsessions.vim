@@ -1,6 +1,6 @@
 " gitsessions.vim - auto save/load vim sessions based on git branches
-" Maintainer:       William Ting <http://williamting.com>
-" Version:          0.1
+" Maintainer:       William Ting <io at williamting.com>
+" Site:             https://github.com/wting/gitsessions.vim
 
 if exists('g:loaded_gitsessions') || &cp
     finish
