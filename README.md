@@ -45,6 +45,11 @@ Default session directory is `~/.vim/sessions` and can be modified in `~/.vimrc`
 1. `cd ~/.vim/bundle`
 2. `git clone git://github.com/wting/gitsessions.vim.git`
 
+## Misc
+
+- `/` in feature names are replaced with `_`. As a result, it is possible to
+clobber sessions if one branch is named `foo/123` and another `foo_123`.
+
 ## Acknowledgement
 
 This plugin is based on Vim Wikia's [Go Away And Come Back][vw] entry.

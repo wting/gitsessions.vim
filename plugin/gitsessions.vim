@@ -11,12 +11,16 @@ if !exists("g:gitsessions_dir")
     let g:gitsessions_dir = 'sessions'
 endif
 
+function! s:replace_bad_ch(string)
+    return substitute(a:string, '/', '_', '')
+endfunction
+
 function! s:trim(string)
     return substitute(substitute(a:string, '^\s*\(.\{-}\)\s*$', '\1', ''), '\n', '', '')
 endfunction
 
 function! s:gitbranchname()
-    return s:trim((system("git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* //'")))
+    return s:replace_bad_ch(s:trim(system("git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* //'")))
 endfunction
 
 function! s:sessiondir()
