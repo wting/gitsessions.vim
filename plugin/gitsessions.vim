@@ -23,24 +23,29 @@ function! s:gitbranchname()
     return s:replace_bad_ch(s:trim(system("git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* //'")))
 endfunction
 
-function! s:sessiondir()
+function! s:sessiondir(...)
     let l:dir = $HOME . '/.vim/' . g:gitsessions_dir . getcwd()
-    if (filewritable(l:dir) != 2)
+    let l:create_dir = a:0 > 0 ? a:1 : 0
+
+    if (l:create_dir && (filewritable(l:dir) != 2))
+        echom "creating directory" . l:dir
         exe 'silent !mkdir -p ' l:dir
         redraw!
     endif
+
     return l:dir
 endfunction
 
 function! s:sessionfile()
     let l:branch = s:gitbranchname()
-    if (l:branch == '')
+    if (empty(l:branch))
         return s:sessiondir() . '/master'
     endif
     return s:sessiondir() . '/' . l:branch
 endfunction
 
 function! g:SaveSession()
+    let l:dir = s:sessiondir(1)
     let l:file = s:sessionfile()
     exe "mksession! " . l:file
     echom "session created: " . l:file
