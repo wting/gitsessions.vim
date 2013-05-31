@@ -1,4 +1,4 @@
-# gitsessions
+# gitsessions.vim
 
 ## Description
 
@@ -31,7 +31,6 @@ previous settings will be restored.
 - `<leader>ss` save session
 - `<leader>ls` load session
 - `<leader>ds` delete session
-
 - `:SaveSession` save session
 - `:LoadSession` load session
 - `:DeleteSession` delete session
