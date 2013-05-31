@@ -82,13 +82,21 @@ function! s:find_proj_dir(dir)
     return s:parent_dir(s:find_git_dir(a:dir))
 endfunction
 
-function! s:session_path(dir)
-    let l:path = g:gitsessions_dir . a:dir
-    return s:is_abs_path(g:gitsessions_dir) ? l:path : g:VIMFILESDIR . l:path
+function! s:session_path(sdir, pdir)
+    let l:path = a:sdir . a:pdir
+    return s:is_abs_path(a:sdir) ? l:path : g:VIMFILESDIR . l:path
+endfunction
+
+function! s:git_path()
+    return s:session_path(g:gitsessions_dir, s:find_proj_dir(s:start_dir))
+endfunction
+
+function! s:non_git_path()
+    return s:session_path(g:gitsessions_dir, s:start_dir)
 endfunction
 
 function! s:sessiondir()
-    return s:in_git_repo() ? s:session_path(s:find_proj_dir(s:start_dir)) : s:session_path(s:start_dir)
+    return s:in_git_repo() ? s:git_path() : s:non_git_path()
 endfunction
 
 function! s:sessionfile()
@@ -108,8 +116,6 @@ function! g:SaveSession()
             echoerr "cannot create directory:" l:dir
             return
         endif
-
-        echom "created directory:" l:dir
     endif
 
     if (isdirectory(l:dir) && (filewritable(l:dir) != 2))
