@@ -40,7 +40,7 @@ function! s:sessiondir(...)
     let l:create_dir = a:0 > 0 ? a:1 : 0
 
     if (l:create_dir && (filewritable(l:dir) != 2))
-        execute 'silent !mkdir -p' l:dir
+        call mkdir(l:dir, 'p')
         echom "created directory:" l:dir
         redraw!
     endif
