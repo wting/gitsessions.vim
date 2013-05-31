@@ -15,6 +15,14 @@ if !exists('s:session_exist')
     let s:session_exist = 0
 endif
 
+if !exists('g:VIMFILESDIR')
+    if (has('unix'))
+        let g:VIMFILESDIR = $HOME . '/.vim/'
+    elseif (has('win32'))
+        let g:VIMFILESDIR = $VIM . '/vimfiles/'
+    endif
+endif
+
 function! s:replace_bad_ch(string)
     return substitute(a:string, '/', '_', '')
 endfunction
@@ -28,7 +36,7 @@ function! s:gitbranchname()
 endfunction
 
 function! s:sessiondir(...)
-    let l:dir = $HOME . '/.vim/' . g:gitsessions_dir . getcwd()
+    let l:dir = g:VIMFILESDIR . g:gitsessions_dir . getcwd()
     let l:create_dir = a:0 > 0 ? a:1 : 0
 
     if (l:create_dir && (filewritable(l:dir) != 2))
