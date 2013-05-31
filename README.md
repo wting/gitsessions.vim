@@ -2,26 +2,36 @@
 
 ## Description
 
-Automatically saves and loads sessions based on the root directory of the git
-repository and the git branch name *after* the first manual save.
+Automatically saves and loads sessions based on git repository and branch name
+*after* the first manual save.
 
-If the current directory is not a subdirectory of a git repository, then the
+If the current directory is not in a subdirectory of a git repository, then the
 session is saved based on the path.
+
+More precisely, the session file is based on the following the directory Vim
+was started in:
+
+- If that directory is a subdirectory of a git repository (not necessary tracked
+  in the repo), then the session file is based on the repo's path and branch
+  name.
+- If the directory is not a subdirectory of a git repository, then the session
+  file is based on the full path.
 
 ## Usage
 
-`cd` to the directory and work as normal. Save the session at least once per
-directory and git branch. Once a session has been saved, they will be updated
+Switch to the project directory and work as normal. Save the session at least
+once per git branch. Once a session has been saved, they will be updated
 automatically when exiting Vim.
 
-In the future, run Vim in the same directory and git branch and previous
-settings will be restored.
+In the future, run Vim in the same directory or git repository and branch and
+previous settings will be restored.
 
 ### Commands
 
 - `<leader>ss` save session
 - `<leader>ls` load session
 - `<leader>ds` delete session
+
 - `:SaveSession` save session
 - `:LoadSession` load session
 - `:DeleteSession` delete session
