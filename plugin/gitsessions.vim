@@ -11,6 +11,10 @@ if !exists('g:gitsessions_dir')
     let g:gitsessions_dir = 'sessions'
 endif
 
+if !exists('s:session_exist')
+    let s:session_exist = 0
+endif
+
 function! s:replace_bad_ch(string)
     return substitute(a:string, '/', '_', '')
 endfunction
@@ -47,13 +51,14 @@ endfunction
 function! g:SaveSession()
     let l:dir = s:sessiondir(1)
     let l:file = s:sessionfile()
+    let s:session_exist = 1
     execute 'mksession!' l:file
     echom "session created:" l:file
 endfunction
 
 function! g:UpdateSession()
     let l:file = s:sessionfile()
-    if (filereadable(l:file))
+    if (s:session_exist && filereadable(l:file))
         execute 'mksession!' l:file
         echom "session updated:" l:file
     endif
@@ -68,6 +73,7 @@ function! g:LoadSession(...)
     let l:file = s:sessionfile()
 
     if (filereadable(l:file))
+        let s:session_exist = 1
         execute 'source' l:file
         echom "session loaded:" l:file
     elseif (l:show_msg)
