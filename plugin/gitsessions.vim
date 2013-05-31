@@ -78,30 +78,30 @@ function! s:default_dir()
     return g:VIMFILESDIR . g:gitsessions_dir . s:start_dir
 endfunction
 
-function! s:sessiondir(...)
-    let l:dir = s:in_git_repo() ? s:git_dir() : s:default_dir()
-    let l:create_dir = a:0 > 0 ? a:1 : 0
-
-    if (l:create_dir && !isdirectory(l:dir))
-        call mkdir(l:dir, 'p')
-        echom "created directory:" l:dir
-        redraw!
-    endif
-
-    return l:dir
+function! s:sessiondir()
+    return s:in_git_repo() ? s:git_dir() : s:default_dir()
 endfunction
 
 function! s:sessionfile()
+    let l:dir = s:sessiondir()
     let l:branch = s:gitbranchname()
-    if (empty(l:branch))
-        return s:sessiondir() . '/master'
-    endif
-    return s:sessiondir() . '/' . l:branch
+    return (empty(l:branch)) ? l:dir . '/master' : l:dir . '/' . l:branch
 endfunction
 
 function! g:SaveSession()
-    let l:dir = s:sessiondir(1)
+    let l:dir = s:sessiondir()
     let l:file = s:sessionfile()
+
+    if (!isdirectory(l:dir))
+        call mkdir(l:dir, 'p')
+
+        if (!isdirectory(l:dir))
+            echoerr "cannot create directory:" l:dir
+            return
+        endif
+
+        echom "created directory:" l:dir
+    endif
 
     if (isdirectory(l:dir) && (filewritable(l:dir) != 2))
         echoerr "cannot write to:" l:dir
@@ -136,6 +136,8 @@ function! g:LoadSession(...)
     elseif (l:show_msg)
         echom "session not found:" l:file
     endif
+
+    redrawstatus!
 endfunction
 
 function! g:DeleteSession()
