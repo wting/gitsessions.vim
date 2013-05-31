@@ -36,11 +36,20 @@ previous settings will be restored.
 - `:LoadSession` load session
 - `:DeleteSession` delete session
 
-## Options
+### Options
 
-Default session directory is `~/.vim/sessions` and can be modified in `~/.vimrc`:
+Default session directory is `~/.vim/sessions` and can be modified in `.vimrc`:
 
-    let g:gitsessions_dir = 'sessions'
+    let g:gitsessions_dir = 'relative/path/in/.vim/'
+
+Or
+
+    let g:gitsessions_dir = '/absolute/path/'
+
+### Misc
+
+- `/` in feature names are replaced with `_`. As a result, it is possible to
+clobber sessions if one branch is named `foo/123` and another `foo_123`.
 
 ## Installation
 
@@ -53,11 +62,6 @@ Default session directory is `~/.vim/sessions` and can be modified in `~/.vimrc`
 
 1. `cd ~/.vim/bundle`
 2. `git clone git://github.com/wting/gitsessions.vim.git`
-
-## Misc
-
-- `/` in feature names are replaced with `_`. As a result, it is possible to
-clobber sessions if one branch is named `foo/123` and another `foo_123`.
 
 ## Acknowledgement
 
