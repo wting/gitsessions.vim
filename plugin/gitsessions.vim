@@ -53,13 +53,9 @@ endfunction
 
 function! g:UpdateSession()
     let l:file = s:sessionfile()
-    let l:show_msg = a:0 > 0 ? a:1 : 0
-
     if (filereadable(l:file))
         execute 'mksession!' l:file
-        if (l:show_msg)
-            echom "session updated:" l:file
-        endif
+        echom "session updated:" l:file
     endif
 endfunction
 
@@ -90,8 +86,7 @@ endfunction
 augroup gitsessions
     autocmd!
     autocmd VimEnter * nested :call g:LoadSession()
-    autocmd BufLeave * :call g:UpdateSession()
-    autocmd VimLeave * :call g:UpdateSession(1)
+    autocmd VimLeave * :call g:UpdateSession()
 augroup END
 
 silent! nnoremap <unique> <silent> <leader>ss :call g:SaveSession()<cr>
