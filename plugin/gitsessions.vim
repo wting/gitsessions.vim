@@ -39,7 +39,7 @@ function! s:sessiondir(...)
     let l:dir = g:VIMFILESDIR . g:gitsessions_dir . getcwd()
     let l:create_dir = a:0 > 0 ? a:1 : 0
 
-    if (l:create_dir && (filewritable(l:dir) != 2))
+    if (l:create_dir && !isdirectory(l:dir))
         call mkdir(l:dir, 'p')
         echom "created directory:" l:dir
         redraw!
@@ -59,6 +59,12 @@ endfunction
 function! g:SaveSession()
     let l:dir = s:sessiondir(1)
     let l:file = s:sessionfile()
+
+    if (isdirectory(l:dir) && (filewritable(l:dir) != 2))
+        echo "cannot write to:" l:dir
+        return
+    endif
+
     let s:session_exist = 1
     execute 'mksession!' l:file
     echom "session created:" l:file
