@@ -60,14 +60,14 @@ function! s:parent_dir(path)
 endfunction
 
 function! s:find_git_dir(dir)
-    if (!s:in_git_repo())
+    if !s:in_git_repo()
         echoerr "not in git repo"
         return
     endif
 
-    if (isdirectory(a:dir . '/.git'))
+    if isdirectory(a:dir . '/.git')
         return a:dir . '/.git'
-    elseif (has('file_in_path') && has('path_extra'))
+    elseif has('file_in_path') && has('path_extra')
         return finddir('.git', a:dir . ';')
     elseif
         return s:find_git_dir_aux(a:dir)
@@ -109,16 +109,16 @@ function! g:SaveSession()
     let l:dir = s:sessiondir()
     let l:file = s:sessionfile()
 
-    if (!isdirectory(l:dir))
+    if !isdirectory(l:dir)
         call mkdir(l:dir, 'p')
 
-        if (!isdirectory(l:dir))
+        if !isdirectory(l:dir)
             echoerr "cannot create directory:" l:dir
             return
         endif
     endif
 
-    if (isdirectory(l:dir) && (filewritable(l:dir) != 2))
+    if isdirectory(l:dir) && (filewritable(l:dir) != 2)
         echoerr "cannot write to:" l:dir
         return
     endif
@@ -131,25 +131,25 @@ endfunction
 
 function! g:UpdateSession()
     let l:file = s:sessionfile()
-    if (s:session_exist && filereadable(l:file))
+    if s:session_exist && filereadable(l:file)
         execute 'mksession!' l:file
         echom "session updated:" l:file
     endif
 endfunction
 
 function! g:LoadSession(...)
-    if (argc() != 0)
+    if argc() != 0
         return
     endif
 
     let l:show_msg = a:0 > 0 ? a:1 : 0
     let l:file = s:sessionfile()
 
-    if (filereadable(l:file))
+    if filereadable(l:file)
         let s:session_exist = 1
         execute 'source' l:file
         echom "session loaded:" l:file
-    elseif (l:show_msg)
+    elseif l:show_msg
         echom "session not found:" l:file
     endif
     redrawstatus!
@@ -158,7 +158,7 @@ endfunction
 function! g:DeleteSession()
     let l:file = s:sessionfile()
     let s:session_exist = 0
-    if (filereadable(l:file))
+    if filereadable(l:file)
         call delete(l:file)
         echom "session deleted:" l:file
     endif
