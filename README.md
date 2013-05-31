@@ -48,8 +48,9 @@ Or
 
 ### Misc
 
-- `/` in feature names are replaced with `_`. As a result, it is possible to
-clobber sessions if one branch is named `foo/123` and another `foo_123`.
+`/` in feature names are replaced with `_`. As a result, it is possible to
+clobber sessions if one branch is named `foo/123` and another `foo_123` in the
+same repository.
 
 ## Installation
 
