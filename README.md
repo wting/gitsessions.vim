@@ -2,7 +2,7 @@
 
 ## Description
 
-Automatically saves and loads sessions based on git repository and branch name
+Automatically saves and loads [sessions][mks] based on git repository and branch name
 *after* the first manual save.
 
 If the current directory is not in a subdirectory of a git repository, then the
@@ -71,6 +71,7 @@ This plugin is based on Vim Wikia's [Go Away And Come Back][vw] entry.
 
 Released under MIT License, full details in `LICENSE` file.
 
+[mks]: http://vimdoc.sourceforge.net/htmldoc/starting.html#:mksession
 [p]: https://github.com/tpope/vim-pathogen
 [v]: https://github.com/gmarik/vundle
 [vqs]: https://github.com/gmarik/vundle#quick-start
