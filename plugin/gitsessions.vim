@@ -15,12 +15,12 @@ if !exists('s:session_exist')
     let s:session_exist = 0
 endif
 
+if !exists('s:start_dir')
+    let s:start_dir = getcwd()
+endif
+
 if !exists('g:VIMFILESDIR')
-    if (has('unix'))
-        let g:VIMFILESDIR = $HOME . '/.vim/'
-    elseif (has('win32'))
-        let g:VIMFILESDIR = $VIM . '/vimfiles/'
-    endif
+    let g:VIMFILESDIR = has('unix') ? $HOME . '/.vim/' : $VIM . '/vimfiles/'
 endif
 
 function! s:replace_bad_ch(string)
@@ -32,11 +32,54 @@ function! s:trim(string)
 endfunction
 
 function! s:gitbranchname()
-    return s:replace_bad_ch(s:trim(system("git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* //'")))
+    return s:replace_bad_ch(s:trim(system("\git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* //'")))
+endfunction
+
+function! s:in_git_repo()
+    return empty(s:trim(system("\git status >/dev/null")))
+endfunction
+
+function! s:os_sep()
+    return has('unix') ? '/' : '\'
+endfunction
+
+function! s:is_abs_path(path)
+    return a:path[0] == s:os_sep()
+endfunction
+
+function! s:parent_dir(path)
+    let l:sep = s:os_sep()
+    let l:front = s:is_abs_path(a:path) ? l:sep : ''
+    return l:front . join(split(a:path, l:sep)[:-2], l:sep)
+endfunction
+
+function! s:find_git_dir(dir)
+    if (!s:in_git_repo())
+        echoerr "not in git repo"
+        return
+    endif
+
+    if (has('file_in_path') && has('path_extra'))
+        return s:parent_dir(finddir('.git', a:dir . ';'))
+    elseif
+        return s:parent_dir(s:find_git_dir_aux(a:dir))
+    endif
+endfunction
+
+function! s:find_git_dir_aux(dir)
+    return isdirectory(a:dir . '/.git') ? a:dir . '/.git' : s:find_git_dir_aux(s:parent_dir(a:dir))
+endfunction
+
+function! s:git_dir()
+    return g:VIMFILESDIR . g:gitsessions_dir . s:find_git_dir(s:start_dir)
+endfunction
+
+function! s:default_dir()
+    return g:VIMFILESDIR . g:gitsessions_dir . s:start_dir
 endfunction
 
 function! s:sessiondir(...)
-    let l:dir = g:VIMFILESDIR . g:gitsessions_dir . getcwd()
+    let l:dir = s:in_git_repo() ? s:git_dir() : s:default_dir()
     let l:create_dir = a:0 > 0 ? a:1 : 0
 
     if (l:create_dir && !isdirectory(l:dir))
@@ -61,7 +104,7 @@ function! g:SaveSession()
     let l:file = s:sessionfile()
 
     if (isdirectory(l:dir) && (filewritable(l:dir) != 2))
-        echo "cannot write to:" l:dir
+        echoerr "cannot write to:" l:dir
         return
     endif
 
@@ -97,9 +140,10 @@ endfunction
 
 function! g:DeleteSession()
     let l:file = s:sessionfile()
+    let s:session_exist = 0
     if (filereadable(l:file))
-        echom "session deleted:" l:file
         call delete(l:file)
+        echom "session deleted:" l:file
     endif
 endfunction
 
@@ -109,10 +153,10 @@ augroup gitsessions
     autocmd VimLeave * :call g:UpdateSession()
 augroup END
 
-silent! nnoremap <unique> <silent> <leader>ss :call g:SaveSession()<cr>
-silent! nnoremap <unique> <silent> <leader>ls :call g:LoadSession(1)<cr>
-silent! nnoremap <unique> <silent> <leader>ds :call g:DeleteSession()<cr>
-
 command SaveSession call g:SaveSession()
 command LoadSession call g:LoadSession(1)
 command DeleteSession call g:DeleteSession()
+
+silent! nnoremap <unique> <silent> <leader>ss :call g:SaveSession()<cr>
+silent! nnoremap <unique> <silent> <leader>ls :call g:LoadSession(1)<cr>
+silent! nnoremap <unique> <silent> <leader>ds :call g:DeleteSession()<cr>

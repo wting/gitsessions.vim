@@ -2,12 +2,11 @@
 
 ## Description
 
-Automatically saves and loads sessions based on the current working directory
-and git branch name *after* the first manual save.
+Automatically saves and loads sessions based on the root directory of the git
+repository and the git branch name *after* the first manual save.
 
-If the directory is not a git repository, then the session saves it to a default
-file named `master`. This makes it easy to continue with the same session when
-`git init` is invoked with the default branch name.
+If the current directory is not a subdirectory of a git repository, then the
+session is saved based on the path.
 
 ## Usage
 
