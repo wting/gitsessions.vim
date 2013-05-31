@@ -66,11 +66,11 @@ function! s:find_git_dir(dir)
     endif
 
     if (isdirectory(a:dir . '/.git'))
-        return a:dir
+        return a:dir . '/.git'
     elseif (has('file_in_path') && has('path_extra'))
-        return s:parent_dir(finddir('.git', a:dir . ';'))
+        return finddir('.git', a:dir . ';')
     elseif
-        return s:parent_dir(s:find_git_dir_aux(a:dir))
+        return s:find_git_dir_aux(a:dir)
     endif
 endfunction
 
@@ -78,16 +78,17 @@ function! s:find_git_dir_aux(dir)
     return isdirectory(a:dir . '/.git') ? a:dir . '/.git' : s:find_git_dir_aux(s:parent_dir(a:dir))
 endfunction
 
-function! s:git_dir()
-    return g:VIMFILESDIR . g:gitsessions_dir . s:find_git_dir(s:start_dir)
+function! s:find_proj_dir(dir)
+    return s:parent_dir(s:find_git_dir(a:dir))
 endfunction
 
-function! s:default_dir()
-    return g:VIMFILESDIR . g:gitsessions_dir . s:start_dir
+function! s:session_path(dir)
+    let l:path = g:gitsessions_dir . a:dir
+    return s:is_abs_path(g:gitsessions_dir) ? l:path : g:VIMFILESDIR . l:path
 endfunction
 
 function! s:sessiondir()
-    return s:in_git_repo() ? s:git_dir() : s:default_dir()
+    return s:in_git_repo() ? s:session_path(s:find_proj_dir(s:start_dir)) : s:session_path(s:start_dir)
 endfunction
 
 function! s:sessionfile()
@@ -119,6 +120,7 @@ function! g:SaveSession()
     let s:session_exist = 1
     execute 'mksession!' l:file
     echom "session created:" l:file
+    redrawstatus!
 endfunction
 
 function! g:UpdateSession()
@@ -144,7 +146,6 @@ function! g:LoadSession(...)
     elseif (l:show_msg)
         echom "session not found:" l:file
     endif
-
     redrawstatus!
 endfunction
 
