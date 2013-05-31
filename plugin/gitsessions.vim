@@ -53,9 +53,13 @@ endfunction
 
 function! g:UpdateSession()
     let l:file = s:sessionfile()
+    let l:show_msg = a:0 > 0 ? a:1 : 0
+
     if (filereadable(l:file))
         execute 'mksession!' l:file
-        echom "session updated:" l:file
+        if (l:show_msg)
+            echom "session updated:" l:file
+        endif
     endif
 endfunction
 
@@ -64,13 +68,13 @@ function! g:LoadSession(...)
         return
     endif
 
-    let l:show_error = a:0 > 0 ? a:1 : 0
+    let l:show_msg = a:0 > 0 ? a:1 : 0
     let l:file = s:sessionfile()
 
     if (filereadable(l:file))
         execute 'source' l:file
         echom "session loaded:" l:file
-    elseif (l:show_error)
+    elseif (l:show_msg)
         echom "session not found:" l:file
     endif
 endfunction
@@ -83,9 +87,12 @@ function! g:DeleteSession()
     endif
 endfunction
 
-au VimEnter * nested :call g:LoadSession()
-au BufLeave * silent! :call g:UpdateSession()
-au VimLeave * silent! :call g:UpdateSession()
+augroup gitsessions
+    autocmd!
+    autocmd VimEnter * nested :call g:LoadSession()
+    autocmd BufLeave * :call g:UpdateSession()
+    autocmd VimLeave * :call g:UpdateSession(1)
+augroup END
 
 silent! nnoremap <unique> <silent> <leader>ss :call g:SaveSession()<cr>
 silent! nnoremap <unique> <silent> <leader>ls :call g:LoadSession(1)<cr>
