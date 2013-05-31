@@ -59,7 +59,8 @@ function! g:UpdateSession()
     endif
 endfunction
 
-function! g:LoadSession()
+function! g:LoadSession(...)
+    let l:show_error = a:0 > 0 ? a:1 : 0
     if (argc() != 0)
         return
     endif
@@ -68,6 +69,8 @@ function! g:LoadSession()
     if (filereadable(l:file))
         echom "session loaded: " . l:file
         exe 'source ' l:file
+    elseif (l:show_error)
+        echom "session not found: " . l:file
     endif
 endfunction
 
@@ -80,13 +83,13 @@ function! g:DeleteSession()
 endfunction
 
 au VimEnter * nested :call g:LoadSession()
-au VimLeave * :call g:UpdateSession()
 au BufLeave * silent! :call g:UpdateSession()
+au VimLeave * silent! :call g:UpdateSession()
 
 silent! nnoremap <unique> <silent> <leader>ss :call g:SaveSession()<cr>
-silent! nnoremap <unique> <silent> <leader>ls :call g:LoadSession()<cr>
+silent! nnoremap <unique> <silent> <leader>ls :call g:LoadSession(1)<cr>
 silent! nnoremap <unique> <silent> <leader>ds :call g:DeleteSession()<cr>
 
 command SaveSession call g:SaveSession()
-command LoadSession call g:LoadSession()
+command LoadSession call g:LoadSession(1)
 command DeleteSession call g:DeleteSession()
