@@ -59,7 +59,9 @@ function! s:find_git_dir(dir)
         return
     endif
 
-    if (has('file_in_path') && has('path_extra'))
+    if (isdirectory(a:dir . '/.git'))
+        return a:dir
+    elseif (has('file_in_path') && has('path_extra'))
         return s:parent_dir(finddir('.git', a:dir . ';'))
     elseif
         return s:parent_dir(s:find_git_dir_aux(a:dir))
