@@ -87,16 +87,12 @@ function! s:session_path(sdir, pdir)
     return s:is_abs_path(a:sdir) ? l:path : g:VIMFILESDIR . l:path
 endfunction
 
-function! s:git_path()
-    return s:session_path(g:gitsessions_dir, s:find_proj_dir(s:start_dir))
-endfunction
-
-function! s:non_git_path()
-    return s:session_path(g:gitsessions_dir, s:start_dir)
-endfunction
-
 function! s:sessiondir()
-    return s:in_git_repo() ? s:git_path() : s:non_git_path()
+    if s:in_git_repo()
+        return s:session_path(g:gitsessions_dir, s:find_proj_dir(s:start_dir))
+    else
+        return s:session_path(g:gitsessions_dir, s:start_dir)
+    endif
 endfunction
 
 function! s:sessionfile()
