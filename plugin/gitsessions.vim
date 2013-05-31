@@ -7,7 +7,7 @@ if exists('g:loaded_gitsessions') || &cp
 endif
 let g:loaded_gitsessions = 1
 
-if !exists("g:gitsessions_dir")
+if !exists('g:gitsessions_dir')
     let g:gitsessions_dir = 'sessions'
 endif
 
@@ -28,8 +28,8 @@ function! s:sessiondir(...)
     let l:create_dir = a:0 > 0 ? a:1 : 0
 
     if (l:create_dir && (filewritable(l:dir) != 2))
-        echom "creating directory" . l:dir
-        exe 'silent !mkdir -p ' l:dir
+        execute 'silent !mkdir -p' l:dir
+        echom "created directory:" l:dir
         redraw!
     endif
 
@@ -47,37 +47,38 @@ endfunction
 function! g:SaveSession()
     let l:dir = s:sessiondir(1)
     let l:file = s:sessionfile()
-    exe "mksession! " . l:file
-    echom "session created: " . l:file
+    execute 'mksession!' l:file
+    echom "session created:" l:file
 endfunction
 
 function! g:UpdateSession()
     let l:file = s:sessionfile()
     if (filereadable(l:file))
-        exe "mksession! " . l:file
-        echom "session updated: " . l:file
+        execute 'mksession!' l:file
+        echom "session updated:" l:file
     endif
 endfunction
 
 function! g:LoadSession(...)
-    let l:show_error = a:0 > 0 ? a:1 : 0
     if (argc() != 0)
         return
     endif
 
+    let l:show_error = a:0 > 0 ? a:1 : 0
     let l:file = s:sessionfile()
+
     if (filereadable(l:file))
-        echom "session loaded: " . l:file
-        exe 'source ' l:file
+        execute 'source' l:file
+        echom "session loaded:" l:file
     elseif (l:show_error)
-        echom "session not found: " . l:file
+        echom "session not found:" l:file
     endif
 endfunction
 
 function! g:DeleteSession()
     let l:file = s:sessionfile()
     if (filereadable(l:file))
-        echom "session deleted: " . l:file
+        echom "session deleted:" l:file
         call delete(l:file)
     endif
 endfunction
