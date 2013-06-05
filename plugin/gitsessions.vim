@@ -120,8 +120,13 @@ function! g:SaveSession()
     endif
 
     let s:session_exist = 1
-    execute 'mksession!' l:file
-    echom "session created:" l:file
+    if filereadable(l:file)
+        execute 'mksession!' l:file
+        echom "session updated:" l:file
+    else
+        execute 'mksession!' l:file
+        echom "session saved:" l:file
+    endif
     redrawstatus!
 endfunction
 
@@ -173,3 +178,4 @@ command DeleteSession call g:DeleteSession()
 silent! nnoremap <unique> <silent> <leader>ss :call g:SaveSession()<cr>
 silent! nnoremap <unique> <silent> <leader>ls :call g:LoadSession(1)<cr>
 silent! nnoremap <unique> <silent> <leader>ds :call g:DeleteSession()<cr>
+
