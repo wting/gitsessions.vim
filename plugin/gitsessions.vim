@@ -2,7 +2,7 @@
 " Maintainer:       William Ting <io at williamting.com>
 " Site:             https://github.com/wting/gitsessions.vim
 
-if exists('g:loaded_gitsessions') || &cp
+if exists('g:loaded_gitsessions') || v:version < 700 || &cp
     finish
 endif
 let g:loaded_gitsessions = 1
