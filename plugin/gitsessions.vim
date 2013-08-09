@@ -30,7 +30,7 @@ if !exists('g:VIMFILESDIR')
 endif
 
 function! s:replace_bad_ch(string)
-    return substitute(a:string, '/', '_', '')
+    return substitute(a:string, '/', '_', 'g')
 endfunction
 
 function! s:trim(string)
