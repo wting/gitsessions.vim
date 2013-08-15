@@ -28,12 +28,19 @@ previous settings will be restored.
 
 ### Commands
 
-- `<leader>ss` save session
-- `<leader>ls` load session
-- `<leader>ds` delete session
-- `:SaveSession` save session
-- `:LoadSession` load session
-- `:DeleteSession` delete session
+- `:GitSaveSession` save session
+- `:GitLoadSession` load session
+- `:GitDeleteSession` delete session
+
+### Example Keybindings
+
+You may want to add these bindings to your `~/.vimrc`:
+
+```vim
+nnoremap <leader>ss :GitSessionSave<cr>
+nnoremap <leader>ls :GitSessionLoad<cr>
+nnoremap <leader>ds :GitSessionDelete<cr>
+```
 
 ### Options
 

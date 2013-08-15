@@ -2,6 +2,8 @@
 " Maintainer:       William Ting <io at williamting.com>
 " Site:             https://github.com/wting/gitsessions.vim
 
+" setup
+
 if exists('g:loaded_gitsessions') || v:version < 700 || &cp
     finish
 endif
@@ -29,6 +31,8 @@ if !exists('g:VIMFILESDIR')
     let g:VIMFILESDIR = has('unix') ? $HOME . '/.vim/' : $VIM . '/vimfiles/'
 endif
 
+" helper functions
+
 function! s:replace_bad_ch(string)
     return substitute(a:string, '/', '_', 'g')
 endfunction
@@ -52,6 +56,8 @@ endfunction
 function! s:is_abs_path(path)
     return a:path[0] == s:os_sep()
 endfunction
+
+" logic functions
 
 function! s:parent_dir(path)
     let l:sep = s:os_sep()
@@ -101,7 +107,9 @@ function! s:sessionfile()
     return (empty(l:branch)) ? l:dir . '/master' : l:dir . '/' . l:branch
 endfunction
 
-function! g:SaveSession()
+" public functions
+
+function! g:GitSessionSave()
     let l:dir = s:sessiondir()
     let l:file = s:sessionfile()
 
@@ -130,7 +138,7 @@ function! g:SaveSession()
     redrawstatus!
 endfunction
 
-function! g:UpdateSession()
+function! g:GitSessionUpdate()
     let l:file = s:sessionfile()
     if s:session_exist && filereadable(l:file)
         execute 'mksession!' l:file
@@ -138,7 +146,7 @@ function! g:UpdateSession()
     endif
 endfunction
 
-function! g:LoadSession(...)
+function! g:GitSessionLoad(...)
     if argc() != 0
         return
     endif
@@ -156,7 +164,7 @@ function! g:LoadSession(...)
     redrawstatus!
 endfunction
 
-function! g:DeleteSession()
+function! g:GitSessionDelete()
     let l:file = s:sessionfile()
     let s:session_exist = 0
     if filereadable(l:file)
@@ -167,15 +175,44 @@ endfunction
 
 augroup gitsessions
     autocmd!
-    autocmd VimEnter * nested :call g:LoadSession()
-    autocmd VimLeave * :call g:UpdateSession()
+    autocmd VimEnter * nested :call g:GitSessionLoad()
+    autocmd VimLeave * :call g:GitSessionUpdate()
 augroup END
 
-command SaveSession call g:SaveSession()
-command LoadSession call g:LoadSession(1)
-command DeleteSession call g:DeleteSession()
+command GitSessionSave call g:GitSessionSave()
+command GitSessionLoad call g:GitSessionLoad(1)
+command GitSessionDelete call g:GitSessionDelete()
 
-silent! nnoremap <unique> <silent> <leader>ss :call g:SaveSession()<cr>
-silent! nnoremap <unique> <silent> <leader>ls :call g:LoadSession(1)<cr>
-silent! nnoremap <unique> <silent> <leader>ds :call g:DeleteSession()<cr>
+" deprecation functions
+function! s:deprecate_wrapper(lambda, message)
+    execute a:lambda
+    echom a:message
+endfunction
 
+function! s:deprecate_save()
+    call s:deprecate_wrapper(
+        \ 'call g:GitSessionSave()',
+        \ 'Deprecated: Please use `GitSessionSave` instead. More info: http://goo.gl/123')
+endfunction
+
+function! s:deprecate_load()
+    call s:deprecate_wrapper(
+        \ 'call g:GitSessionLoad(1)',
+        \ 'Deprecated: Please use `GitSessionLoad` instead. More info: http://goo.gl/123')
+endfunction
+
+function! s:deprecate_delete()
+    call s:deprecate_wrapper(
+        \ 'call g:GitSessionDelete()',
+        \ 'Deprecated: Please use `GitSessionDelete` instead. More info: http://goo.gl/123')
+endfunction
+
+" deprecated, will be removed by 2013-10
+command SaveSession call s:deprecate_save()
+command LoadSession call s:deprecate_load()
+command DeleteSession call s:deprecate_delete()
+
+" deprecated, will be removed by 2013-10
+silent! nnoremap <unique> <silent> <leader>ss :call <SID>deprecate_save()<cr>
+silent! nnoremap <unique> <silent> <leader>ls :call <SID>deprecate_load()<cr>
+silent! nnoremap <unique> <silent> <leader>ds :call <SID>deprecate_delete()<cr>
