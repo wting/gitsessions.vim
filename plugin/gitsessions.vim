@@ -192,19 +192,19 @@ endfunction
 function! s:deprecate_save()
     call s:deprecate_wrapper(
         \ 'call g:GitSessionSave()',
-        \ 'Deprecated: Please use `GitSessionSave` instead. More info: http://goo.gl/123')
+        \ 'Deprecated: Please use `GitSessionSave` instead. More info: http://goo.gl/PqNo27')
 endfunction
 
 function! s:deprecate_load()
     call s:deprecate_wrapper(
         \ 'call g:GitSessionLoad(1)',
-        \ 'Deprecated: Please use `GitSessionLoad` instead. More info: http://goo.gl/123')
+        \ 'Deprecated: Please use `GitSessionLoad` instead. More info: http://goo.gl/PqNo27')
 endfunction
 
 function! s:deprecate_delete()
     call s:deprecate_wrapper(
         \ 'call g:GitSessionDelete()',
-        \ 'Deprecated: Please use `GitSessionDelete` instead. More info: http://goo.gl/123')
+        \ 'Deprecated: Please use `GitSessionDelete` instead. More info: http://goo.gl/PqNo27')
 endfunction
 
 " deprecated, will be removed by 2013-10
