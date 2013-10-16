@@ -28,9 +28,9 @@ previous settings will be restored.
 
 ### Commands
 
-- `:GitSaveSession` save session
-- `:GitLoadSession` load session
-- `:GitDeleteSession` delete session
+- `:GitSessionSave` save session
+- `:GitSessionLoad` load session
+- `:GitSessionDelete` delete session
 
 ### Example Keybindings
 
