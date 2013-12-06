@@ -42,7 +42,7 @@ function! s:trim(string)
 endfunction
 
 function! s:gitbranchname()
-    return s:replace_bad_ch(s:trim(system("\git rev-parse --abrev-ref HEAD")))
+    return s:replace_bad_ch(s:trim(system("\git rev-parse --abbrev-ref HEAD")))
 endfunction
 
 function! s:in_git_repo()
