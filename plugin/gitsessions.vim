@@ -182,37 +182,3 @@ augroup END
 command GitSessionSave call g:GitSessionSave()
 command GitSessionLoad call g:GitSessionLoad(1)
 command GitSessionDelete call g:GitSessionDelete()
-
-" deprecation functions
-function! s:deprecate_wrapper(lambda, message)
-    execute a:lambda
-    echom a:message
-endfunction
-
-function! s:deprecate_save()
-    call s:deprecate_wrapper(
-        \ 'call g:GitSessionSave()',
-        \ 'Deprecated: Please use `GitSessionSave` instead. More info: http://goo.gl/PqNo27')
-endfunction
-
-function! s:deprecate_load()
-    call s:deprecate_wrapper(
-        \ 'call g:GitSessionLoad(1)',
-        \ 'Deprecated: Please use `GitSessionLoad` instead. More info: http://goo.gl/PqNo27')
-endfunction
-
-function! s:deprecate_delete()
-    call s:deprecate_wrapper(
-        \ 'call g:GitSessionDelete()',
-        \ 'Deprecated: Please use `GitSessionDelete` instead. More info: http://goo.gl/PqNo27')
-endfunction
-
-" deprecated, will be removed by 2013-10
-command SaveSession call s:deprecate_save()
-command LoadSession call s:deprecate_load()
-command DeleteSession call s:deprecate_delete()
-
-" deprecated, will be removed by 2013-10
-silent! nnoremap <unique> <silent> <leader>ss :call <SID>deprecate_save()<cr>
-silent! nnoremap <unique> <silent> <leader>ls :call <SID>deprecate_load()<cr>
-silent! nnoremap <unique> <silent> <leader>ds :call <SID>deprecate_delete()<cr>
