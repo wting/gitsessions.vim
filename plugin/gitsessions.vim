@@ -42,7 +42,7 @@ function! s:trim(string)
 endfunction
 
 function! s:gitbranchname()
-    return s:replace_bad_ch(s:trim(system("\git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* //'")))
+    return s:replace_bad_ch(s:trim(system("\git rev-parse --abrev-ref HEAD")))
 endfunction
 
 function! s:in_git_repo()
