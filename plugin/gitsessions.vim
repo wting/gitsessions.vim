@@ -23,10 +23,6 @@ if !exists('s:session_exist')
     let s:session_exist = 0
 endif
 
-if !exists('s:start_dir')
-    let s:start_dir = getcwd()
-endif
-
 if !exists('g:VIMFILESDIR')
     let g:VIMFILESDIR = has('unix') ? $HOME . '/.vim/' : $VIM . '/vimfiles/'
 endif
@@ -95,9 +91,9 @@ endfunction
 
 function! s:sessiondir()
     if s:in_git_repo()
-        return s:session_path(g:gitsessions_dir, s:find_proj_dir(s:start_dir))
+        return s:session_path(g:gitsessions_dir, s:find_proj_dir(getcwd()))
     else
-        return s:session_path(g:gitsessions_dir, s:start_dir)
+        return s:session_path(g:gitsessions_dir, getcwd())
     endif
 endfunction
 
