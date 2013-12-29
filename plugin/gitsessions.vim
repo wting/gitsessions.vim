@@ -29,7 +29,7 @@ endif
 
 " helper functions
 
-function! s:replace_bad_ch(string)
+function! s:replace_bad_chars(string)
     return substitute(a:string, '/', '_', 'g')
 endfunction
 
@@ -37,8 +37,8 @@ function! s:trim(string)
     return substitute(substitute(a:string, '^\s*\(.\{-}\)\s*$', '\1', ''), '\n', '', '')
 endfunction
 
-function! s:gitbranchname()
-    return s:replace_bad_ch(s:trim(system("\git rev-parse --abbrev-ref HEAD")))
+function! s:git_branch_name()
+    return s:replace_bad_chars(s:trim(system("\git rev-parse --abbrev-ref HEAD")))
 endfunction
 
 function! s:in_git_repo()
@@ -46,6 +46,7 @@ function! s:in_git_repo()
 endfunction
 
 function! s:os_sep()
+    " TODO(ting|2013-12-29): untested for Windows gvim
     return has('unix') ? '/' : '\'
 endfunction
 
@@ -89,7 +90,7 @@ function! s:session_path(sdir, pdir)
     return s:is_abs_path(a:sdir) ? l:path : g:VIMFILESDIR . l:path
 endfunction
 
-function! s:sessiondir()
+function! s:session_dir()
     if s:in_git_repo()
         return s:session_path(g:gitsessions_dir, s:find_proj_dir(getcwd()))
     else
@@ -97,17 +98,17 @@ function! s:sessiondir()
     endif
 endfunction
 
-function! s:sessionfile()
-    let l:dir = s:sessiondir()
-    let l:branch = s:gitbranchname()
+function! s:session_file()
+    let l:dir = s:session_dir()
+    let l:branch = s:git_branch_name()
     return (empty(l:branch)) ? l:dir . '/master' : l:dir . '/' . l:branch
 endfunction
 
 " public functions
 
 function! g:GitSessionSave()
-    let l:dir = s:sessiondir()
-    let l:file = s:sessionfile()
+    let l:dir = s:session_dir()
+    let l:file = s:session_file()
 
     if !isdirectory(l:dir)
         call mkdir(l:dir, 'p')
@@ -135,7 +136,7 @@ function! g:GitSessionSave()
 endfunction
 
 function! g:GitSessionUpdate()
-    let l:file = s:sessionfile()
+    let l:file = s:session_file()
     if s:session_exist && filereadable(l:file)
         execute 'mksession!' l:file
         echom "session updated:" l:file
@@ -148,7 +149,7 @@ function! g:GitSessionLoad(...)
     endif
 
     let l:show_msg = a:0 > 0 ? a:1 : 0
-    let l:file = s:sessionfile()
+    let l:file = s:session_file()
 
     if filereadable(l:file)
         let s:session_exist = 1
@@ -161,7 +162,7 @@ function! g:GitSessionLoad(...)
 endfunction
 
 function! g:GitSessionDelete()
-    let l:file = s:sessionfile()
+    let l:file = s:session_file()
     let s:session_exist = 0
     if filereadable(l:file)
         call delete(l:file)
