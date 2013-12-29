@@ -2,8 +2,8 @@
 
 ## Description
 
-Automatically saves and loads [sessions][mks] based on git repository and branch name
-*after* the first manual save.
+Automatically saves and loads [sessions][mks] based on git repository and branch
+name *after* the first manual save.
 
 If the current directory is not in a subdirectory of a git repository, then the
 session is saved based on the path.
@@ -36,11 +36,9 @@ previous settings will be restored.
 
 You may want to add these bindings to your `~/.vimrc`:
 
-```vim
-nnoremap <leader>ss :GitSessionSave<cr>
-nnoremap <leader>ls :GitSessionLoad<cr>
-nnoremap <leader>ds :GitSessionDelete<cr>
-```
+    nnoremap <leader>ss :GitSessionSave<cr>
+    nnoremap <leader>ls :GitSessionLoad<cr>
+    nnoremap <leader>ds :GitSessionDelete<cr>
 
 ### Options
 
