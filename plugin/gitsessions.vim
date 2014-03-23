@@ -135,11 +135,15 @@ function! g:GitSessionSave()
     redrawstatus!
 endfunction
 
-function! g:GitSessionUpdate()
+function! g:GitSessionUpdate(...)
+    let l:show_msg = a:0 > 0 ? a:1 : 1
     let l:file = s:session_file()
+
     if s:session_exist && filereadable(l:file)
         execute 'mksession!' l:file
-        echom "session updated:" l:file
+        if l:show_msg
+            echom "session updated:" l:file
+        endif
     endif
 endfunction
 
@@ -172,7 +176,8 @@ endfunction
 
 augroup gitsessions
     autocmd!
-    autocmd VimEnter * nested :call g:GitSessionLoad()
+    autocmd VimEnter * :call g:GitSessionLoad()
+    autocmd BufEnter * :call g:GitSessionUpdate(0)
     autocmd VimLeave * :call g:GitSessionUpdate()
 augroup END
 
