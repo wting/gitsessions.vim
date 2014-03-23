@@ -2,29 +2,25 @@
 
 ## Description
 
-Automatically saves and loads [sessions][mks] based on git repository and branch
-name *after* the first manual save.
+gitsessions.vim improves on vim's [`:mksession`][mks] command (saving open
+windows, tabs, splits, marks, etc) by eliminating most of the unnecessary work:
 
-If the current directory is not in a subdirectory of a git repository, then the
-session is saved based on the path.
-
-More precisely, the session file is based on the following the directory Vim
-was started in:
-
-- If that directory is a subdirectory of a git repository (not necessary tracked
-  in the repo), then the session file is based on the repo's path and branch
-  name.
-- If the directory is not a subdirectory of a git repository, then the session
-  file is based on the full path.
+- automatically save, load, and update sessions
+- automatically determine a session save location
 
 ## Usage
 
-Switch to the project directory and work as normal. Save the session at least
-once per git branch. Once a session has been saved, they will be updated
-automatically when exiting Vim.
+Once sessions have been initialized by running `:GitSessionSave`, session
+management is automatically handled thereafter. Opening vim without a file in
+the project folder will automatically resume a session, and sessions are
+automatically saved upon exit and entering a buffer (in case vim crashes).
 
-In the future, run Vim in the same directory or git repository and branch and
-previous settings will be restored.
+A project directory is based on the location of the git repository and branch
+name. If you're not in a git repository then it's based on vim's current working
+directory (determined by where vim was opened).
+
+To load a session, run vim in the same git repository and branch (or path for
+non-git projects) and previous sessions should automatically be reloaded.
 
 ### Commands
 
@@ -34,11 +30,9 @@ previous settings will be restored.
 
 ### Example Keybindings
 
-You may want to add these bindings to your `~/.vimrc`:
-
-    nnoremap <leader>ss :GitSessionSave<cr>
-    nnoremap <leader>ls :GitSessionLoad<cr>
-    nnoremap <leader>ds :GitSessionDelete<cr>
+    nnoremap <leader>gss :GitSessionSave<cr>
+    nnoremap <leader>gsl :GitSessionLoad<cr>
+    nnoremap <leader>gsd :GitSessionDelete<cr>
 
 ### Options
 
@@ -51,6 +45,15 @@ Or
     let g:gitsessions_dir = '/absolute/path/'
 
 ### Misc
+
+*plugin updates*
+
+Vim sessions save plugin state and keybindings. If you update a plugin and load
+a session, vim might complain about not being able to find old plugin functions
+that were changed / removed. Either ignore the errors or start a new session
+from scratch that does not have old plugin state.
+
+*git branch names*
 
 `/` in git branch names are replaced with `_`. As a result, it is possible to
 clobber sessions if one branch is named `foo/123` and another `foo_123` in the
