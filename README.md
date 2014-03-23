@@ -13,7 +13,7 @@ windows, tabs, splits, marks, etc) by eliminating most of the unnecessary work:
 Once the user has saved the initial session via `:GitSessionSave`, session
 management is automatically handled. Opening vim without a file in the project
 folder will automatically resume a session, and sessions are automatically saved
-upon exit.
+upon exit and entering a buffer (in case vim crashes).
 
 A project directory saved based on the location of the git repository and branch
 name. If you're not in a git repository then it's based on the current working
