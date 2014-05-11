@@ -9,14 +9,15 @@ if exists('g:loaded_gitsessions') || v:version < 700 || &cp
 endif
 let g:loaded_gitsessions = 1
 
-function! g:rtrim_slashes(string)
+function! s:rtrim_slashes(string)
     return substitute(a:string, '[/\\]$', '', '')
 endfunction
 
 if !exists('g:gitsessions_dir')
     let g:gitsessions_dir = 'sessions'
 else
-    let g:gitsessions_dir = g:rtrim_slashes(g:gitsessions_dir)
+    let g:gitsessions_dir = s:rtrim_slashes(g:gitsessions_dir)
+
 endif
 
 if !exists('s:session_exist')
