@@ -44,6 +44,14 @@ Or
 
     let g:gitsessions_dir = '/absolute/path/'
 
+
+If you don't want the session to be loaded automatically when launching vim,
+you can disable this behavior:
+
+    let g:gitsessions_disable_auto_load = 1
+
+You need to set this variable _before_ loading the plugin.
+
 ### Misc
 
 *plugin updates*
