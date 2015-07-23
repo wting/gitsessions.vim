@@ -2,7 +2,7 @@
 " Maintainer:       William Ting <io at williamting.com>
 " Site:             https://github.com/wting/gitsessions.vim
 
-" setup
+" SETUP
 
 if exists('g:loaded_gitsessions') || v:version < 700 || &cp
     finish
@@ -13,6 +13,12 @@ function! s:rtrim_slashes(string)
     return substitute(a:string, '[/\\]$', '', '')
 endfunction
 
+" fix for Windows users (https://github.com/wting/gitsessions.vim/issues/2)
+if !exists('g:VIMFILESDIR')
+    let g:VIMFILESDIR = has('unix') ? $HOME . '/.vim/' : $VIM . '/vimfiles/'
+endif
+
+" sessions save path
 if !exists('g:gitsessions_dir')
     let g:gitsessions_dir = 'sessions'
 else
@@ -20,15 +26,12 @@ else
 
 endif
 
+" used to control auto-save behavior
 if !exists('s:session_exist')
     let s:session_exist = 0
 endif
 
-if !exists('g:VIMFILESDIR')
-    let g:VIMFILESDIR = has('unix') ? $HOME . '/.vim/' : $VIM . '/vimfiles/'
-endif
-
-" helper functions
+" HELPER FUNCTIONS
 
 function! s:replace_bad_chars(string)
     return substitute(a:string, '/', '_', 'g')
@@ -47,7 +50,7 @@ function! s:in_git_repo()
 endfunction
 
 function! s:os_sep()
-    " TODO(ting|2013-12-29): untested for Windows gvim
+    " TODO(wting|2013-12-29): untested for Windows gvim
     return has('unix') ? '/' : '\'
 endfunction
 
@@ -55,7 +58,7 @@ function! s:is_abs_path(path)
     return a:path[0] == s:os_sep()
 endfunction
 
-" logic functions
+" LOGIC FUNCTIONS
 
 function! s:parent_dir(path)
     let l:sep = s:os_sep()
@@ -82,7 +85,7 @@ function! s:find_git_dir_aux(dir)
     return isdirectory(a:dir . '/.git') ? a:dir . '/.git' : s:find_git_dir_aux(s:parent_dir(a:dir))
 endfunction
 
-function! s:find_proj_dir(dir)
+function! s:find_project_dir(dir)
     return s:parent_dir(s:find_git_dir(a:dir))
 endfunction
 
@@ -93,7 +96,7 @@ endfunction
 
 function! s:session_dir()
     if s:in_git_repo()
-        return s:session_path(g:gitsessions_dir, s:find_proj_dir(getcwd()))
+        return s:session_path(g:gitsessions_dir, s:find_project_dir(getcwd()))
     else
         return s:session_path(g:gitsessions_dir, getcwd())
     endif
@@ -105,7 +108,7 @@ function! s:session_file()
     return (empty(l:branch)) ? l:dir . '/master' : l:dir . '/' . l:branch
 endfunction
 
-" public functions
+" PUBLIC FUNCTIONS
 
 function! g:GitSessionSave()
     let l:dir = s:session_dir()
