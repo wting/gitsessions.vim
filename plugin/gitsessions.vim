@@ -23,12 +23,6 @@ if !exists('g:gitsessions_dir')
     let g:gitsessions_dir = 'sessions'
 else
     let g:gitsessions_dir = s:rtrim_slashes(g:gitsessions_dir)
-
-endif
-
-" used to control auto-save behavior
-if !exists('s:session_exist')
-    let s:session_exist = 0
 endif
 
 " Cache session file
@@ -36,7 +30,14 @@ endif
 " Cons: switch between git branches will be missed from GitSessionUpdate()
 " 	You are advised to save it manually by calling to GitSessionSave()
 " Default - cache disabled
-let g:gitsessions_use_cache = 0
+if !exists('g:gitsessions_use_cache')
+    let g:gitsessions_use_cache = 0
+endif
+
+" used to control auto-save behavior
+if !exists('s:session_exist')
+    let s:session_exist = 0
+endif
 
 " HELPER FUNCTIONS
 
