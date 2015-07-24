@@ -31,6 +31,13 @@ if !exists('s:session_exist')
     let s:session_exist = 0
 endif
 
+" Cache session file,
+" Pros: performance gain (x100) on large repositories
+" Cons: switch between git branches will be missed from GitSessionUpdate()
+" 	You are advised to save it manually by calling to GitSessionSave()
+" Default - cache disabled
+let g:cache_session_file = 0
+
 " HELPER FUNCTIONS
 
 function! s:replace_bad_chars(string)
@@ -102,17 +109,24 @@ function! s:session_dir()
     endif
 endfunction
 
-function! s:session_file()
+function! s:session_file(invalidate_cache)
+    if g:cache_session_file && !a:invalidate_cache && exists('s:cached_session_file')
+	return s:cached_session_file
+    endif
     let l:dir = s:session_dir()
     let l:branch = s:git_branch_name()
-    return (empty(l:branch)) ? l:dir . '/master' : l:dir . '/' . l:branch
+    if exists('s:cached_session_file')
+	unlet s:cached_session_file
+    endif
+    let s:cached_session_file = (empty(l:branch)) ? l:dir . '/master' : l:dir . '/' . l:branch
+    return s:cached_session_file
 endfunction
 
 " PUBLIC FUNCTIONS
 
 function! g:GitSessionSave()
     let l:dir = s:session_dir()
-    let l:file = s:session_file()
+    let l:file = s:session_file(1)
 
     if !isdirectory(l:dir)
         call mkdir(l:dir, 'p')
@@ -141,7 +155,7 @@ endfunction
 
 function! g:GitSessionUpdate(...)
     let l:show_msg = a:0 > 0 ? a:1 : 1
-    let l:file = s:session_file()
+    let l:file = s:session_file(0)
 
     if s:session_exist && filereadable(l:file)
         execute 'mksession!' l:file
@@ -157,7 +171,7 @@ function! g:GitSessionLoad(...)
     endif
 
     let l:show_msg = a:0 > 0 ? a:1 : 0
-    let l:file = s:session_file()
+    let l:file = s:session_file(1)
 
     if filereadable(l:file)
         let s:session_exist = 1
@@ -170,8 +184,14 @@ function! g:GitSessionLoad(...)
 endfunction
 
 function! g:GitSessionDelete()
-    let l:file = s:session_file()
+    " Delete is a tricky case, we still need to use cached version if any.
+    " This version was used and saved by GitSessionUpdate(), however
+    " we should ensure that session cached variable is cleared.
+    let l:file = s:session_file(1)
     let s:session_exist = 0
+    if exists('s:cached_session_file')
+	unlet s:cached_session_file
+    endif
     if filereadable(l:file)
         call delete(l:file)
         echom "session deleted:" l:file
