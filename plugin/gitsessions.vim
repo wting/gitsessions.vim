@@ -31,12 +31,12 @@ if !exists('s:session_exist')
     let s:session_exist = 0
 endif
 
-" Cache session file,
+" Cache session file
 " Pros: performance gain (x100) on large repositories
 " Cons: switch between git branches will be missed from GitSessionUpdate()
 " 	You are advised to save it manually by calling to GitSessionSave()
 " Default - cache disabled
-let g:cache_session_file = 0
+let g:gitsessions_use_cache = 0
 
 " HELPER FUNCTIONS
 
@@ -110,7 +110,7 @@ function! s:session_dir()
 endfunction
 
 function! s:session_file(invalidate_cache)
-    if g:cache_session_file && !a:invalidate_cache && exists('s:cached_session_file')
+    if g:gitsessions_use_cache && !a:invalidate_cache && exists('s:cached_session_file')
 	return s:cached_session_file
     endif
     let l:dir = s:session_dir()
