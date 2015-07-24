@@ -36,6 +36,8 @@ non-git projects) and previous sessions should automatically be reloaded.
 
 ### Options
 
+#### Change sessions save location
+
 Default session directory is `~/.vim/sessions` and can be modified in `.vimrc`:
 
     let g:gitsessions_dir = 'relative/path/in/.vim/'
@@ -44,6 +46,7 @@ Or
 
     let g:gitsessions_dir = '/absolute/path/'
 
+#### Toggle auto load session behavior
 
 If you don't want the session to be loaded automatically when launching vim,
 you can disable this behavior:
@@ -51,6 +54,36 @@ you can disable this behavior:
     let g:gitsessions_disable_auto_load = 1
 
 You need to set this variable _before_ loading the plugin.
+
+#### Toggle session caching behavior
+
+If changing buffers is slow\*, the plugin can cache the sessions file so it's
+not recalculated when switching between buffers:
+
+    let g:gitsessions_use_cache = 1
+
+This does mean that the user has to actively purge the cache (by running
+`GitSessionSave`) on all open vim programs using a repository if the underlying
+git repo has changed branches. For example:
+
+    # on terminal 1:
+    $ cd ~/project && git checkout master
+    $ vim
+    <vim> :let g:gitsessions_use_cache = 1
+    # save / load a gitsession, continue working
+
+    # on terminal 2:
+    $ cd ~/project && git checkout feature_branch
+
+    # on terminal 1, vim is still running
+    # If I exit vim now, it is still using the cached branch and will save to
+    # the `master` session file instead of `feature_branch`.
+    # Manually purge the cached session file:
+    <vim> :GitSessionSave
+    # If I exit vim now, it will save to the `feature_branch` session file.
+
+\* [~550ms](https://github.com/wting/gitsessions.vim/pull/10) when working in
+extremely large git repositories.
 
 ### Misc
 
