@@ -31,7 +31,7 @@ endif
 " 	You are advised to save it manually by calling to GitSessionSave()
 " Default - cache disabled
 if !exists('g:gitsessions_use_cache')
-    let g:gitsessions_use_cache = 0
+    let g:gitsessions_use_cache = 1
 endif
 
 " used to control auto-save behavior

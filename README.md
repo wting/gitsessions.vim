@@ -57,10 +57,15 @@ You need to set this variable _before_ loading the plugin.
 
 #### Toggle session caching behavior
 
-If changing buffers is slow\*, the plugin can cache the sessions file so it's
-not recalculated when switching between buffers:
+By default the plugin caches the session file so it's not recalculated when
+switching between buffers. However this means when switching between git
+branches the user needs manually save to start saving against the new branch's
+git session.
 
-    let g:gitsessions_use_cache = 1
+To disable this behavior and always save vim sessions against the current git
+branch name please add the following toggle to .vimrc:
+
+    let g:gitsessions_use_cache = 0
 
 This does mean that the user has to actively purge the cache (by running
 `GitSessionSave`) on all open vim programs using a repository if the underlying
