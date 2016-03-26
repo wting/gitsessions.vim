@@ -202,7 +202,7 @@ endfunction
 augroup gitsessions
     autocmd!
     if ! exists("g:gitsessions_disable_auto_load")
-        autocmd VimEnter * :call g:GitSessionLoad()
+        autocmd VimEnter * nested :call g:GitSessionLoad()
     endif
     autocmd BufEnter * :call g:GitSessionUpdate(0)
     autocmd VimLeave * :call g:GitSessionUpdate()
