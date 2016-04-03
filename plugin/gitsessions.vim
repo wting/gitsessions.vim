@@ -54,7 +54,9 @@ function! s:git_branch_name()
 endfunction
 
 function! s:in_git_repo()
-    return empty(s:trim(system("\git status >/dev/null")))
+    let is_git_repo = system("\git rev-parse --git-dir >/dev/null")
+    return v:shell_error == 0
+
 endfunction
 
 function! s:os_sep()
@@ -126,6 +128,10 @@ endfunction
 " PUBLIC FUNCTIONS
 
 function! g:GitSessionSave()
+    if !s:in_git_repo()
+        echoerr "not in git repo"
+        return
+    endif
     let l:dir = s:session_dir()
     let l:file = s:session_file(1)
 
