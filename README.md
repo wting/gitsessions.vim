@@ -5,7 +5,7 @@
 gitsessions.vim improves on vim's [`:mksession`][mks] command (saving open
 windows, tabs, splits, marks, etc) by eliminating most of the unnecessary work:
 
-- automatically save, load, and update sessions
+- automatically load and update sessions
 - automatically determine a session save location
 
 ## Usage
