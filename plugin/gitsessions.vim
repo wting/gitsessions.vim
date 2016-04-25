@@ -54,7 +54,9 @@ function! s:git_branch_name()
 endfunction
 
 function! s:in_git_repo()
-    return empty(s:trim(system("\git status >/dev/null")))
+    let l:is_git_repo = system("\git rev-parse --git-dir >/dev/null")
+    return v:shell_error == 0
+
 endfunction
 
 function! s:os_sep()
@@ -75,11 +77,6 @@ function! s:parent_dir(path)
 endfunction
 
 function! s:find_git_dir(dir)
-    if !s:in_git_repo()
-        echoerr "not in git repo"
-        return
-    endif
-
     if isdirectory(a:dir . '/.git')
         return a:dir . '/.git'
     elseif has('file_in_path') && has('path_extra')
@@ -126,6 +123,10 @@ endfunction
 " PUBLIC FUNCTIONS
 
 function! g:GitSessionSave()
+    if !s:in_git_repo()
+        echoerr "not in git repo"
+        return
+    endif
     let l:dir = s:session_dir()
     let l:file = s:session_file(1)
 
