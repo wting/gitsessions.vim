@@ -109,12 +109,12 @@ endfunction
 
 function! s:session_file(invalidate_cache)
     if g:gitsessions_use_cache && !a:invalidate_cache && exists('s:cached_session_file')
-	return s:cached_session_file
+        return s:cached_session_file
     endif
     let l:dir = s:session_dir()
     let l:branch = s:git_branch_name()
     if exists('s:cached_session_file')
-	unlet s:cached_session_file
+        unlet s:cached_session_file
     endif
     let s:cached_session_file = (empty(l:branch)) ? l:dir . '/master' : l:dir . '/' . l:branch
     return s:cached_session_file
@@ -192,7 +192,7 @@ function! g:GitSessionDelete()
     let l:file = s:session_file(1)
     let s:session_exist = 0
     if exists('s:cached_session_file')
-	unlet s:cached_session_file
+        unlet s:cached_session_file
     endif
     if filereadable(l:file)
         call delete(l:file)
