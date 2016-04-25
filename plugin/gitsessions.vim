@@ -54,7 +54,7 @@ function! s:git_branch_name()
 endfunction
 
 function! s:in_git_repo()
-    let is_git_repo = system("\git rev-parse --git-dir >/dev/null")
+    let l:is_git_repo = system("\git rev-parse --git-dir >/dev/null")
     return v:shell_error == 0
 
 endfunction
