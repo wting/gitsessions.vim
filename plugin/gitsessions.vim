@@ -176,8 +176,8 @@ function! g:GitSessionLoad(...)
     let l:file = s:session_file(1)
 
     if filereadable(l:file)
-        let s:session_exist = 1
         execute 'source' l:file
+        let s:session_exist = 1
         echom "session loaded:" l:file
     elseif l:show_msg
         echom "session not found:" l:file
