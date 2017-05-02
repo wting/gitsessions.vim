@@ -81,7 +81,7 @@ function! s:find_git_dir(dir)
         return a:dir . '/.git'
     elseif has('file_in_path') && has('path_extra')
         return finddir('.git', a:dir . ';')
-    elseif
+    else
         return s:find_git_dir_aux(a:dir)
     endif
 endfunction
