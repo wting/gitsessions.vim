@@ -171,13 +171,15 @@ function! g:GitSessionLoad(...)
     if argc() != 0
         return
     endif
+    :only
+    :tabonly
 
     let l:show_msg = a:0 > 0 ? a:1 : 0
     let l:file = s:session_file(1)
 
     if filereadable(l:file)
-        let s:session_exist = 1
         execute 'source' l:file
+        let s:session_exist = 1
         echom "session loaded:" l:file
     elseif l:show_msg
         echom "session not found:" l:file
@@ -205,8 +207,10 @@ augroup gitsessions
     if ! exists("g:gitsessions_disable_auto_load")
         autocmd VimEnter * :call g:GitSessionLoad()
     endif
-    autocmd BufEnter * :call g:GitSessionUpdate(0)
-    autocmd VimLeave * :call g:GitSessionUpdate()
+    if ! exists("g:gitsessions_disable_auto_update")
+      autocmd BufEnter * :call g:GitSessionUpdate(0)
+      autocmd VimLeave * :call g:GitSessionUpdate()
+    end
 augroup END
 
 command GitSessionSave call g:GitSessionSave()
