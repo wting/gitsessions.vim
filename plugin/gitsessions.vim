@@ -171,6 +171,8 @@ function! g:GitSessionLoad(...)
     if argc() != 0
         return
     endif
+    :only
+    :tabonly
 
     let l:show_msg = a:0 > 0 ? a:1 : 0
     let l:file = s:session_file(1)
