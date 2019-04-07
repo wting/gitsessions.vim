@@ -15,7 +15,7 @@ endfunction
 
 " fix for Windows users (https://github.com/wting/gitsessions.vim/issues/2)
 if !exists('g:VIMFILESDIR')
-    let g:VIMFILESDIR = has('unix') ? $HOME . '/.vim/' : $VIM . '/vimfiles/'
+    let g:VIMFILESDIR = has('unix') ? $HOME . '/.vim/' : $HOME . '/vimfiles/'
 endif
 
 " sessions save path
@@ -65,21 +65,25 @@ function! s:os_sep()
 endfunction
 
 function! s:is_abs_path(path)
-    return a:path[0] == s:os_sep()
+    if has('unix')
+        return a:path[0] == s:os_sep()
+    else
+        return a:path[1] == ':'
+    endif
 endfunction
 
 " LOGIC FUNCTIONS
 
 function! s:parent_dir(path)
     let l:sep = s:os_sep()
-    let l:front = s:is_abs_path(a:path) ? l:sep : ''
+    let l:front = s:is_abs_path(a:path) && has('unix') ? l:sep : ''
     return l:front . join(split(a:path, l:sep)[:-2], l:sep)
 endfunction
 
 function! s:find_git_dir(dir)
-    if isdirectory(a:dir . '/.git')
-        return a:dir . '/.git'
-    elseif has('file_in_path') && has('path_extra')
+    if isdirectory(a:dir . s:os_sep() . '.git')
+        return a:dir . s:os_sep() . '.git'
+    elseif has('file_in_path') && has('path_extra') && has('unix')
         return finddir('.git', a:dir . ';')
     else
         return s:find_git_dir_aux(a:dir)
@@ -87,7 +91,7 @@ function! s:find_git_dir(dir)
 endfunction
 
 function! s:find_git_dir_aux(dir)
-    return isdirectory(a:dir . '/.git') ? a:dir . '/.git' : s:find_git_dir_aux(s:parent_dir(a:dir))
+    return isdirectory(a:dir . s:os_sep() . '.git') ? a:dir . s:os_sep() . '.git' : s:find_git_dir_aux(s:parent_dir(a:dir))
 endfunction
 
 function! s:find_project_dir(dir)
@@ -95,7 +99,11 @@ function! s:find_project_dir(dir)
 endfunction
 
 function! s:session_path(sdir, pdir)
-    let l:path = a:sdir . a:pdir
+    if has('unix')
+        let l:path = a:sdir . a:pdir
+    else
+        let l:path = a:sdir . substitute(a:pdir,'^\([A-Z]\):','\\\1','g')
+    endif
     return s:is_abs_path(a:sdir) ? l:path : g:VIMFILESDIR . l:path
 endfunction
 
