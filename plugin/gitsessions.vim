@@ -202,9 +202,16 @@ endfunction
 
 augroup gitsessions
     autocmd!
-    if ! exists("g:gitsessions_disable_auto_load")
+    if !exists("g:gitsessions_disable_auto_load")
         autocmd VimEnter * :call g:GitSessionLoad()
     endif
+    if exists("g:gitsessions_auto_create")
+        let s:has_session_file = filereadable(s:session_file(1))
+        if !s:has_session_file && s:in_git_repo()
+            autocmd VimEnter * :call g:GitSessionSave()
+        endif
+    endif
+    " what if save and immediately load, does it matter?
     autocmd BufEnter * :call g:GitSessionUpdate(0)
     autocmd VimLeave * :call g:GitSessionUpdate()
 augroup END

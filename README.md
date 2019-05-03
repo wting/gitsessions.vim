@@ -46,6 +46,13 @@ Or
 
     let g:gitsessions_dir = '/absolute/path/'
 
+#### Toggle auto create session behavior
+
+If you want to automatically start a session on starting vim within a git
+repo if one doesn't already exist, you can enable this behavior:
+
+    let g:gitsessions_auto_create = 1
+
 #### Toggle auto load session behavior
 
 If you don't want the session to be loaded automatically when launching vim,
