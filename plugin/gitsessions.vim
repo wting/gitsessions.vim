@@ -201,10 +201,12 @@ function! g:GitSessionDelete()
 endfunction
 
 function! g:GitSessionSaveOnExit()
-    if g:gitsessions_auto_create_sessions
-        return GitSessionSave()
-    else
-        return GitSessionUpdate()
+    if s:in_git_repo()
+        if g:gitsessions_auto_create_sessions
+            return GitSessionSave()
+        else
+            return GitSessionUpdate()
+        endif
     endif
 endfunction
 
