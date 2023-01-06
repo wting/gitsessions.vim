@@ -200,13 +200,27 @@ function! g:GitSessionDelete()
     endif
 endfunction
 
+function! g:GitSessionSaveOnExit()
+    if s:in_git_repo()
+        if g:gitsessions_auto_create_sessions
+            return GitSessionSave()
+        else
+            return GitSessionUpdate()
+        endif
+    endif
+endfunction
+
 augroup gitsessions
     autocmd!
     if ! exists("g:gitsessions_disable_auto_load")
-        autocmd VimEnter * :call g:GitSessionLoad()
+        if exists("g:gitsessions_use_nested_load")
+            autocmd VimEnter * nested :call g:GitSessionLoad()
+        else
+            autocmd VimEnter * :call g:GitSessionLoad()
+        endif
     endif
     autocmd BufEnter * :call g:GitSessionUpdate(0)
-    autocmd VimLeave * :call g:GitSessionUpdate()
+    autocmd VimLeave * :call g:GitSessionSaveOnExit()
 augroup END
 
 command GitSessionSave call g:GitSessionSave()

@@ -36,6 +36,16 @@ non-git projects) and previous sessions should automatically be reloaded.
 
 ### Options
 
+#### Automatically create sessions
+
+If you don't want to have to `:GitSaveSession` you can:
+
+    let g:gitsessions_auto_create_sessions = 1
+
+in your .vimrc and a session will be created for you automatically
+on exit if it doesn't already exist. If it does already exist then
+it will be updated on exit as usual.
+
 #### Change sessions save location
 
 Default session directory is `~/.vim/sessions` and can be modified in `.vimrc`:
